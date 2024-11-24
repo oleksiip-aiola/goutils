@@ -3,11 +3,9 @@ package goutils
 import (
 	"errors"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/joho/godotenv"
 )
 
 type AuthClaims struct {
@@ -19,14 +17,7 @@ type AuthClaims struct {
 	jwt.RegisteredClaims
 }
 
-func VerifyToken(token string) (*jwt.Token, error) {
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Error loading .env file")
-	}
-
-	var JwtKey = []byte(os.Getenv("JWT_SECRET_KEY")) // Replace with a strong secret key
-
+func VerifyToken(token, secretKey string) (*jwt.Token, error) {
 	// Parse the JWT token
 	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 
@@ -35,7 +26,7 @@ func VerifyToken(token string) (*jwt.Token, error) {
 			return nil, fmt.Errorf("invalid signing method: %v", token.Header["alg"])
 		}
 		// Return the secret key used for signing
-		return []byte(JwtKey), nil
+		return []byte(secretKey), nil
 	})
 
 	if err != nil {
