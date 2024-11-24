@@ -1,4 +1,4 @@
-module goutils
+module github.com/oleksiip-aiola/goutils
 
 go 1.23.2
 
